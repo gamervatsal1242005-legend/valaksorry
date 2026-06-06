@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For You, Always</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --rose: #c8556a;
+    --rose-light: #f5dde2;
+    --rose-pale: #fdf0f2;
+    --gold: #c9a96e;
+    --dark: #1a1015;
+    --mid: #4a2d35;
+    --text: #2d1a20;
+    --soft: #7a5560;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--dark);
+    color: #f5e6e9;
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  /* ── PETALS ── */
+  .petals-container {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .petal {
+    position: absolute;
+    top: -40px;
+    width: 10px; height: 14px;
+    background: var(--rose);
+    border-radius: 60% 40% 60% 40%;
+    opacity: 0;
+    animation: fall linear infinite;
+  }
+  @keyframes fall {
+    0%   { transform: translateY(0) rotate(0deg) translateX(0); opacity: 0; }
+    5%   { opacity: 0.6; }
+    90%  { opacity: 0.4; }
+    100% { transform: translateY(110vh) rotate(720deg) translateX(60px); opacity: 0; }
+  }
+
+  /* ── HERO ── */
+  #hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 3rem 2rem;
+    z-index: 1;
+  }
+
+  #hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, rgba(200,85,106,0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-eyebrow {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: clamp(0.95rem, 2vw, 1.15rem);
+    color: var(--gold);
+    letter-spacing: 0.18em;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 1s ease forwards 0.3s;
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: clamp(3rem, 10vw, 7rem);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    color: #fff;
+    opacity: 0;
+    animation: fadeUp 1s ease forwards 0.6s;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--rose);
+  }
+
+  .hero-subtitle {
+    margin-top: 2rem;
+    font-size: clamp(0.9rem, 1.8vw, 1.1rem);
+    color: rgba(245,230,233,0.65);
+    letter-spacing: 0.12em;
+    font-weight: 200;
+    opacity: 0;
+    animation: fadeUp 1s ease forwards 0.9s;
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    opacity: 0;
+    animation: fadeUp 1s ease forwards 1.5s;
+  }
+  .scroll-hint span {
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    color: rgba(245,230,233,0.4);
+  }
+  .scroll-line {
+    width: 1px;
+    height: 50px;
+    background: linear-gradient(to bottom, var(--rose), transparent);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:0.4} 50%{opacity:1} }
+
+  /* ── LETTER SECTION ── */
+  #letter {
+    position: relative;
+    z-index: 1;
+    padding: 6rem 2rem;
+    max-width: 680px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .section-tag {
+    font-size: 0.72rem;
+    letter-spacing: 0.28em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 2.5rem;
+    opacity: 0;
+  }
+
+  .letter-body {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.15rem, 2.5vw, 1.4rem);
+    line-height: 1.95;
+    font-weight: 300;
+    color: rgba(245,230,233,0.88);
+    text-align: left;
+    opacity: 0;
+  }
+
+  .letter-body p { margin-bottom: 1.6rem; }
+  .letter-body .highlight {
+    color: #fff;
+    font-style: italic;
+  }
+
+  .letter-signature {
+    margin-top: 3rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1.8rem;
+    color: var(--rose);
+    opacity: 0;
+  }
+
+  /* ── MEMORIES SECTION ── */
+  #memories {
+    position: relative;
+    z-index: 1;
+    padding: 4rem 1.5rem 6rem;
+  }
+
+  .memories-header {
+    text-align: center;
+    margin-bottom: 3.5rem;
+  }
+
+  .memories-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.2rem, 5vw, 3.5rem);
+    font-weight: 300;
+    color: #fff;
+    opacity: 0;
+  }
+
+  .photo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .photo-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 4px;
+    background: #2a1820;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: transform 0.5s ease, box-shadow 0.4s ease;
+  }
+
+  .photo-card:hover {
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 20px 50px rgba(200,85,106,0.3);
+    z-index: 2;
+  }
+
+  .photo-card.tall { grid-row: span 2; }
+  .photo-card.wide { grid-column: span 2; }
+
+  .photo-card img {
+    width: 100%;
+    height: 100%;
+    min-height: 240px;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.6s ease, filter 0.4s ease;
+    filter: brightness(0.88) saturate(0.9);
+  }
+
+  .photo-card:hover img {
+    transform: scale(1.07);
+    filter: brightness(1) saturate(1.1);
+  }
+
+  .photo-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(26,16,21,0.85) 0%, transparent 55%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    display: flex;
+    align-items: flex-end;
+    padding: 1.2rem;
+  }
+
+  .photo-card:hover .photo-overlay { opacity: 1; }
+
+  .photo-caption {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1rem;
+    color: rgba(245,230,233,0.9);
+    line-height: 1.4;
+  }
+
+  /* ── PROMISE SECTION ── */
+  #promise {
+    position: relative;
+    z-index: 1;
+    padding: 6rem 2rem;
+    text-align: center;
+    background: rgba(200,85,106,0.06);
+    border-top: 1px solid rgba(200,85,106,0.15);
+    border-bottom: 1px solid rgba(200,85,106,0.15);
+  }
+
+  .promise-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+    max-width: 900px;
+    margin: 3rem auto 0;
+  }
+
+  .promise-item {
+    padding: 2rem 1.5rem;
+    border: 1px solid rgba(200,85,106,0.2);
+    border-radius: 3px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: border-color 0.3s ease, background 0.3s ease;
+  }
+
+  .promise-item:hover {
+    border-color: rgba(200,85,106,0.6);
+    background: rgba(200,85,106,0.08);
+  }
+
+  .promise-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.5rem;
+    color: var(--rose);
+    opacity: 0.5;
+    margin-bottom: 0.8rem;
+  }
+
+  .promise-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    font-style: italic;
+    color: rgba(245,230,233,0.85);
+    line-height: 1.6;
+  }
+
+  /* ── FINAL ── */
+  #final {
+    position: relative;
+    z-index: 1;
+    min-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 6rem 2rem;
+  }
+
+  #final::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center bottom, rgba(200,85,106,0.2) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .final-quote {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.4;
+    max-width: 700px;
+    color: #fff;
+    opacity: 0;
+  }
+
+  .final-name {
+    margin-top: 3rem;
+    font-size: 0.78rem;
+    letter-spacing: 0.32em;
+    color: var(--gold);
+    text-transform: uppercase;
+    opacity: 0;
+  }
+
+  .heart-pulse {
+    margin-top: 3rem;
+    font-size: 2.5rem;
+    animation: heartbeat 1.4s ease-in-out infinite;
+    opacity: 0;
+  }
+  @keyframes heartbeat {
+    0%,100% { transform: scale(1); }
+    14% { transform: scale(1.25); }
+    28% { transform: scale(1); }
+    42% { transform: scale(1.15); }
+    56% { transform: scale(1); }
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(28px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease, transform 0.8s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── LIGHTBOX ── */
+  #lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(10,5,8,0.95);
+    z-index: 999;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+  #lightbox.open { display: flex; }
+  #lightbox img {
+    max-width: 90vw;
+    max-height: 88vh;
+    object-fit: contain;
+    border-radius: 4px;
+    box-shadow: 0 0 80px rgba(200,85,106,0.25);
+  }
+  #lightbox-close {
+    position: absolute;
+    top: 1.5rem; right: 1.5rem;
+    background: none;
+    border: 1px solid rgba(245,230,233,0.3);
+    color: rgba(245,230,233,0.7);
+    font-size: 1.5rem;
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.3s;
+  }
+  #lightbox-close:hover { border-color: var(--rose); color: var(--rose); }
+
+  /* ── MISSING PHOTO ── */
+  .photo-missing {
+    width: 100%;
+    min-height: 240px;
+    background: #2a1820;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: rgba(245,230,233,0.2);
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 0.95rem;
+    gap: 0.5rem;
+  }
+  .photo-missing svg { opacity: 0.2; }
+</style>
+</head>
+<body>
+
+<!-- Falling Petals -->
+<div class="petals-container" id="petals"></div>
+
+<!-- Lightbox -->
+<div id="lightbox">
+  <button id="lightbox-close" onclick="closeLightbox()">✕</button>
+  <img id="lightbox-img" src="" alt="">
+</div>
+
+<!-- ═══ HERO ═══ -->
+<section id="hero">
+  <p class="hero-eyebrow">a letter from my heart</p>
+  <h1 class="hero-title">I'm <em>Sorry,</em><br>My Love</h1>
+  <p class="hero-subtitle">every word here is true &nbsp;·&nbsp; every feeling is real</p>
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    <span>scroll</span>
+  </div>
+</section>
+
+<!-- ═══ LETTER ═══ -->
+<section id="letter">
+  <p class="section-tag reveal">my confession</p>
+
+  <div class="letter-body reveal">
+    <p>
+      I know you might be hurting right now. I know I hurt you. And I am so deeply, genuinely sorry.
+    </p>
+    <p>
+      What I said — comparing you to my ex — was <span class="highlight">wrong. Cruel. Unfair.</span> There is no excuse for it. She is not better than you. No one is. I said it in anger, and I will regret those words for as long as I live.
+    </p>
+    <p>
+      Yes, you forgot my birthday. You forgot the month. You forgot the day we first met. And it hurt. It really did. But <span class="highlight">pain is not permission</span> to say things that cut someone down to the bone. I failed you there.
+    </p>
+    <p>
+      I know you're on a hard day physically right now, and on top of that, all of this. I wish I had been your comfort instead of your conflict today. That's on me.
+    </p>
+    <p>
+      <span class="highlight">You are irreplaceable to me.</span> Not despite your flaws — but wholly, completely, as you are. Every version of you. And I should have shown you that today instead of tearing you down.
+    </p>
+    <p>
+      Look at us in these photos. Look at how happy we are. That is what is real. <span class="highlight">That is what I want to protect.</span>
+    </p>
+    <p>
+      I love you. I'm sorry. Please forgive me.
+    </p>
+  </div>
+
+  <p class="letter-signature reveal">— always yours</p>
+</section>
+
+<!-- ═══ MEMORIES ═══ -->
+<section id="memories">
+  <div class="memories-header">
+    <p class="section-tag reveal" style="font-size:0.72rem;letter-spacing:0.28em;color:#c9a96e;text-transform:uppercase;margin-bottom:1rem;">us, through it all</p>
+    <h2 class="memories-title reveal">Our Moments</h2>
+  </div>
+
+  <div class="photo-grid" id="photoGrid">
+    <!-- Cards inserted by JS -->
+  </div>
+</section>
+
+<!-- ═══ PROMISES ═══ -->
+<section id="promise">
+  <p class="section-tag reveal">what i promise you</p>
+  <h2 class="reveal" style="font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4vw,3rem);font-weight:300;color:#fff;">My Promises To You</h2>
+
+  <div class="promise-grid">
+    <div class="promise-item reveal">
+      <div class="promise-number">01</div>
+      <p class="promise-text">I will never compare you to anyone, ever again. You are one of a kind.</p>
+    </div>
+    <div class="promise-item reveal">
+      <div class="promise-number">02</div>
+      <p class="promise-text">When I am hurt, I will tell you calmly — not weaponise my words against you.</p>
+    </div>
+    <div class="promise-item reveal">
+      <div class="promise-number">03</div>
+      <p class="promise-text">I will remind you of dates that matter — because our story matters to me.</p>
+    </div>
+    <div class="promise-item reveal">
+      <div class="promise-number">04</div>
+      <p class="promise-text">On your hard days, I will be your peace. Not another storm.</p>
+    </div>
+    <div class="promise-item reveal">
+      <div class="promise-number">05</div>
+      <p class="promise-text">I choose you. Over my past. Over my pride. Over everything.</p>
+    </div>
+    <div class="promise-item reveal">
+      <div class="promise-number">06</div>
+      <p class="promise-text">I will say sorry when I am wrong — and mean it every single time.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FINAL ═══ -->
+<section id="final">
+  <p class="final-quote reveal">"Fighting with you is the worst feeling in the world mane jarai no game paluu— and  losing you naah i can't ever imagine that ."</p>
+  <p class="final-name reveal">written by your vatal forgive me bachu</p>
+  <div class="heart-pulse reveal">🌹</div>
+</section>
+
+<script>
+// ── PETALS ──
+const petalContainer = document.getElementById('petals');
+for (let i = 0; i < 22; i++) {
+  const p = document.createElement('div');
+  p.className = 'petal';
+  const size = 7 + Math.random() * 10;
+  p.style.cssText = `
+    left: ${Math.random() * 100}%;
+    width: ${size}px;
+    height: ${size * 1.4}px;
+    animation-duration: ${8 + Math.random() * 12}s;
+    animation-delay: ${Math.random() * 15}s;
+    opacity: ${0.3 + Math.random() * 0.4};
+    background: hsl(${345 + Math.random() * 20}, ${55 + Math.random() * 20}%, ${55 + Math.random() * 15}%);
+    transform: rotate(${Math.random() * 360}deg);
+  `;
+  petalContainer.appendChild(p);
+}
+
+// ── PHOTOS ── only photos confirmed showing on screen
+const photos = [
+  { file: "pic 3",  caption: "Remember this day?" },
+  { file: "pic 5",  caption: "My heart, right here" },
+  { file: "pic 7",  caption: "Late nights, best nights" },
+  { file: "pic 9",  caption: "I would choose this again" },
+  { file: "pic 11", caption: "We are something special" },
+  { file: "pic 12", caption: "Never letting go" },
+  { file: "pic 13", caption: "You looked so beautiful here" },
+  { file: "pic 16", caption: "Days I never want to forget" },
+  { file: "pic 18", caption: "Our story is not over" },
+  { file: "pic 19", caption: "Every moment with you" },
+  { file: "pic 20", caption: "This is what matters" },
+  { file: "pic 21", caption: "You & me, always" },
+  { file: "pic 22", caption: "I am yours" },
+  { file: "pic 25", caption: "From the very start" },
+  { file: "pic 26", caption: "We built something real" },
+  { file: "pic 28", caption: "Colours of us" },
+  { file: "pic 29", caption: "Perfectly us" },
+];
+
+const layouts = ['','','tall','','','wide','','','tall','','','','wide','','',''];
+const grid = document.getElementById('photoGrid');
+
+function loadPhoto(photo, card) {
+  // if ext is known, try that first, then fallback to others
+  const knownExt = photo.ext || null;
+  const allExts = ['jpg','jpeg','png','JPG','JPEG','PNG'];
+  const exts = knownExt
+    ? [knownExt, ...allExts.filter(e => e.toLowerCase() !== knownExt.toLowerCase())]
+    : allExts;
+  let i = 0;
+  const img = document.createElement('img');
+  img.alt = photo.caption;
+  img.style.cssText = 'width:100%;height:100%;min-height:240px;object-fit:cover;display:block;transition:transform 0.6s ease,filter 0.4s ease;filter:brightness(0.88) saturate(0.9);';
+
+  function next() {
+    if (i >= exts.length) {
+      img.remove();
+      const ph = document.createElement('div');
+      ph.className = 'photo-missing';
+      ph.style.minHeight = '240px';
+      ph.innerHTML = `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><span style="font-size:0.72rem;margin-top:6px;">${photo.file}</span>`;
+      card.insertBefore(ph, card.firstChild);
+      return;
+    }
+    img.src = photo.file + '.' + exts[i++];
+  }
+  img.onerror = next;
+  next();
+
+  const overlay = document.createElement('div');
+  overlay.className = 'photo-overlay';
+  overlay.innerHTML = `<span class="photo-caption">${photo.caption}</span>`;
+  card.appendChild(img);
+  card.appendChild(overlay);
+  card.addEventListener('click', () => openLightbox(img.src, photo.caption));
+}
+
+photos.forEach((photo, i) => {
+  const card = document.createElement('div');
+  const layout = layouts[i % layouts.length];
+  card.className = 'photo-card reveal' + (layout ? ' ' + layout : '');
+  grid.appendChild(card);
+  loadPhoto(photo, card);
+});
+
+// ── LIGHTBOX ──
+const lb = document.getElementById('lightbox');
+const lbImg = document.getElementById('lightbox-img');
+function openLightbox(src, caption) {
+  lbImg.src = src;
+  lbImg.alt = caption;
+  lb.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox() {
+  lb.classList.remove('open');
+  document.body.style.overflow = '';
+}
+lb.addEventListener('click', e => { if (e.target === lb) closeLightbox(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+// ── SCROLL REVEAL ──
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => {
+        entry.target.classList.add('visible');
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }, 80 * (entry.target.dataset.delay || 0));
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.12 });
+
+document.querySelectorAll('.reveal').forEach((el, i) => {
+  el.dataset.delay = i % 6;
+  observer.observe(el);
+});
+</script>
+</body>
+</html>
